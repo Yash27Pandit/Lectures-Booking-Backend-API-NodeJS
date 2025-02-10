@@ -119,12 +119,12 @@ describe ('users logining In', () => {
 // Setting and seeing availability
 describe('Setting and seeing availability', () => {
 
-    it('professor1 sets availability S1', async () => {
+    it('professor1 sets availability P1', async () => {
         const response = await request(app)
-        .post('/api/availability/')
+        .post('/api/availability/professor')
         .set('Authorization', `Bearer ${professor1Token}`)
         .send({
-            slotId: "S1",
+            slotId: "P1",
             startTime: "2025-02-10 10:00AM",
             endTime: "2025-02-10 11:00AM",
         });
@@ -132,12 +132,12 @@ describe('Setting and seeing availability', () => {
         expect(response.body.message).toBe('Availability Set');
     })
 
-    it('professor1 sets availability S2', async () => {
+    it('professor1 sets availability P2', async () => {
         const response = await request(app)
-        .post('/api/availability/')
+        .post('/api/availability/professor')
         .set('Authorization', `Bearer ${professor1Token}`)
         .send({
-            slotId: "S2",
+            slotId: "P2",
             startTime: "2025-02-01 01:00PM",
             endTime: "2025-02-01 02:00PM",
         });
@@ -147,7 +147,8 @@ describe('Setting and seeing availability', () => {
     
     it('students sees availability', async () => {
         const response = await request(app)
-        .get(`/api/availability/${professor1Name}`);
+        .get(`/api/availability/availableSlots`)
+        .set('Authorization', `Bearer ${student1Token}`);
         
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Available time slots');
@@ -157,13 +158,13 @@ describe('Setting and seeing availability', () => {
 //Appointments routes test
 describe('Appointments routes testing', ()=> {
 
-    it('student1 book appointment with professor1 for slot S1', async () => {
+    it('student1 book appointment with professor1 for slot P1', async () => {
         const response = await request(app)
         .post('/api/appointments/')
         .set('Authorization', `Bearer ${student1Token}`)
         .send({
-            slotId: "S1",
-            professorId: `${professor1Id}`
+            slotId: "P1",
+            userId: `${professor1Id}`
         });
         
         appointment1Id = response.body?.appointment?._id;
@@ -172,13 +173,13 @@ describe('Appointments routes testing', ()=> {
         expect(response.body.message).toBe('Appointment booked');
     });
 
-    it('student2 book appointment with professor1 for slot S2', async () => {
+    it('student2 book appointment with professor1 for slot P2', async () => {
         const response = await request(app)
         .post('/api/appointments/')
         .set('Authorization', `Bearer ${student2Token}`)
         .send({
-            slotId: "S2",
-            professorId: `${professor1Id}`
+            slotId: "P2",
+            userId: `${professor1Id}`
         });
         
         appointment2Id = response.body?.appointment?._id;
@@ -198,7 +199,7 @@ describe('Appointments routes testing', ()=> {
 
     it('student1 see no pending appointment', async () => {
         const response  = await request(app)
-        .get('/api/appointments/student')
+        .get('/api/appointments/studentbookings')
         .set('Authorization', `Bearer ${student1Token}`)
 
         expect(response.status).toBe(200);

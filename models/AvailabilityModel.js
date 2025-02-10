@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const AvailabilitySchema = new mongoose.Schema({
-    professorName: { type: String, required: true },
-    professorId: {type: mongoose.Schema.Types.ObjectId},
+    userName: { type: String, required: true },
+    userId: {type: mongoose.Schema.Types.ObjectId},
+    userRole: {type: String, required: true},
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     slotId:{ type: String, required: true},

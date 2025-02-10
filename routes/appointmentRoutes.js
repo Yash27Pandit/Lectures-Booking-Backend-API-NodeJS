@@ -1,19 +1,22 @@
 const express = require("express");
 const authentication = require("../middleware/authentication");
-const { bookingAppointment, studentAppointments, professorAppointments, appointmentCancel } = require("../controllers/appointmentController");
+const { bookingAppointment, studentAppointments, professorAppointments, appointmentCancel, bookingAppointmentwarden } = require("../controllers/appointmentController");
 
 const router = express.Router();
 
 // Student can book appointment
 router.post("/", authentication, bookingAppointment);
 
+// warden books appointment
+router.post("/warden", authentication, bookingAppointmentwarden);
+
 // Student can see appointment
-router.get("/student", authentication, studentAppointments);
+router.get("/studentbookings", authentication, studentAppointments);
 
-// professor can see appointment
-router.get("/professor", authentication, professorAppointments);
+// professor/warden can see appointment
+router.get("/bookings", authentication, professorAppointments);
 
-// professor can cancel the appointment
+// professor/warden can cancel the appointment
 router.delete("/:id", authentication, appointmentCancel);
 
 module.exports = router;
